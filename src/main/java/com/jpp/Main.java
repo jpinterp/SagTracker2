@@ -11,7 +11,7 @@ public class Main
     {
         SpringApplication.run(Main.class, args);
 
-        IDataStore ds = new MongoDataStore();
+        IDataStore ds = DataStoreFactory.getDataStore();
         ds.Connect();
         ds.SetEventName("Tacos");
 
