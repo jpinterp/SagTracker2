@@ -1,0 +1,118 @@
+/* General page layout *************************************/
+/* Use default colors */
+ .leftMargin {
+	width: 15%;
+	height: 800px;      /* same as map */
+	float: left;
+	overflow-y: scroll;
+	border: 2px;
+}
+
+/* Google map specific styles ****************************/
+#map {
+    float: left;
+    height: 800px;  /* same as left margin */
+    width: 85%;     /* left margin is first 15% */
+    border: 2px;
+}
+
+/* Text area at bottom of screen for log messages *********/
+.logArea {
+    height: 100px;
+    width: 85%;
+    float: right;
+    font-size: smaller;
+}
+.logText {
+    height: 100%;
+    width: 100%;
+}
+
+/* Settings bar ******************************************/
+/* From https://www.w3schools.com/howto/howto_css_icon_bar.asp */
+/* Use same colors as station list */
+.icon-bar {
+    display: inline-block;  /* Allow other components to follow on same line */
+    width: 15%;
+    margin: 0;
+    background-color: #EEE;
+    overflow: hidden;       /* Don't interfere with log window */
+}
+.icon-bar a {
+    float: left;            /* Float links side by side */
+    text-align: center;     /* Center-align text */
+    width: 25%;             /* 100% / 4 icons */
+    padding: 6px 0;         /* Some top and bottom padding */
+    /* transition: all 0.3s ease; */  /* Add transition for hover effects */
+    color: #607D8B;         /* Icons same color as badge */
+    font-size: 24px;        /* Determines height of icon bar */
+}
+.icon-bar a:hover {
+    background-color: #DDD; /* Add a hover color */
+}
+
+
+/* List of APRS stations on left side of screen ***********/
+/* From https://angular.io/tutorial/toh-pt2 */
+.selected {
+  background-color: #CFD8DC !important;
+  color: white;
+}
+.heroes {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  width: 15em;
+}
+.heroes li {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #EEE;
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.6em;
+  border-radius: 4px;
+}
+.heroes li.selected:hover {
+  background-color: #BBD8DC !important;
+  color: white;
+}
+.heroes li:hover {
+  color: #607D8B;
+  background-color: #DDD;
+  left: .1em;
+}
+.heroes .text {
+  position: relative;
+  top: -3px;
+  font-size: smaller;
+}
+.heroes .badge {
+  display: inline-block;
+  font-size: small;
+  color: white;
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color: #607D8B;
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+.heroes .badgeInactive {
+  display: inline-block;
+  font-size: small;
+  color: white;
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color: #f48342;  /* reddish-orange  */
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}

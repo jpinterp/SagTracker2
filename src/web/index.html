@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mongo Test</title>
+    <link href="./SagTracker.css" rel="stylesheet" type="text/css" />
+    <!-- For icons in status bar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+<div class="leftMargin">
+    <ul class="heroes">
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+        <li>
+            <span class="badge">W5UVO</span>13:45:05
+        </li>
+        <li>
+            <span class="badge">K1MGY</span>12:13:39
+        </li>
+        <li>
+            <span class="badgeInactive">W1ZAP</span>09:34:48
+        </li>
+    </ul>
+</div>
+
+<div id="map">
+</div>
+
+
+<div>
+<div class="icon-bar">
+    <a href="#"><i class="fa fa-sync fa-sm"></i></a>
+    <a href="#"><i class="fa fa-filter fa-sm"></i></a>
+    <a href="#"><i class="fa fa-sort fa-sm"></i></a>
+    <a href="#"><i class="fa fa-cog fa-sm"></i></a>
+</div>
+
+<div class="logArea">
+<textarea class="logText">
+Log messages go here....
+</textarea>
+</div>
+</div>
+
+<script>
+      function initMap() {
+        /* Holliston: 42.2001° N, 71.4245° W */
+        /* W1RBO: 42.2081 -071.3401 */
+        var latLng = {lat: 42.2001, lng: -71.4245};
+        var gmap = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,           /* zoom:  10 cities, 15 streets, 20 buildings */
+            center: latLng});
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: gmap,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10
+            }});
+      }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3h2nHknAuWoumaxLbVbQ-kl51kQrdBL8&callback=initMap">
+</script>
+</body>
+</html>
