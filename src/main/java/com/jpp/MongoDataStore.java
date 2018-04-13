@@ -134,12 +134,15 @@ public class MongoDataStore implements IDataStore
         StringBuilder sb = new StringBuilder();
         MongoCursor<String> it = client.listDatabaseNames().iterator();
 
+        sb.append('[');
         while (it.hasNext())
         {
             String s = it.next();
             sb.append(new Document(EventField, s).toJson());
             sb.append(",");
         }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append(']');
         return sb.toString();
     }
 
@@ -268,11 +271,14 @@ public class MongoDataStore implements IDataStore
 
         // Convert results into a JSON formatted string
         StringBuilder sb = new StringBuilder();
+        sb.append('[');
         results.forEach((Block<Document>) d ->
             { sb.append(d.toJson());
-              sb.append(",");            // is the trailing comma a problem?
+              sb.append(",");
             }
         );
+        sb.deleteCharAt(sb.length()-1);     // remove trailing ,
+        sb.append(']');
 
         return sb.toString();
     }
