@@ -134,7 +134,7 @@ public class MongoDataStore implements IDataStore
         StringBuilder sb = new StringBuilder();
         MongoCursor<String> it = client.listDatabaseNames().iterator();
 
-        sb.append('[');
+        sb.append("{ eventList: [");
         while (it.hasNext())
         {
             String s = it.next();
@@ -142,7 +142,7 @@ public class MongoDataStore implements IDataStore
             sb.append(",");
         }
         sb.deleteCharAt(sb.length()-1);
-        sb.append(']');
+        sb.append("]}");
         return sb.toString();
     }
 
@@ -271,14 +271,14 @@ public class MongoDataStore implements IDataStore
 
         // Convert results into a JSON formatted string
         StringBuilder sb = new StringBuilder();
-        sb.append('[');
+        sb.append("{ locationList: [");
         results.forEach((Block<Document>) d ->
             { sb.append(d.toJson());
               sb.append(",");
             }
         );
         sb.deleteCharAt(sb.length()-1);     // remove trailing ,
-        sb.append(']');
+        sb.append("]}");
 
         return sb.toString();
     }
