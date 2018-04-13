@@ -1,5 +1,6 @@
-package com.jpp;
+package com.jpp.aprs;
 
+import com.jpp.aprs.AprsPosTimestamp;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

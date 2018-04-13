@@ -1,4 +1,4 @@
-package com.jpp;
+package com.jpp.aprs;
 
 //
 // TNC2 packet, from the APRS Specification, page 82:

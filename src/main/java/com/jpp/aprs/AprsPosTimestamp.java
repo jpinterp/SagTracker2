@@ -1,4 +1,4 @@
-package com.jpp;
+package com.jpp.aprs;
 
 
 /**

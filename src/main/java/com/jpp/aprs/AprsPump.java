@@ -1,4 +1,7 @@
-package com.jpp;
+package com.jpp.aprs;
+
+import com.jpp.IDataStore;
+import com.jpp.JsonHelpers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
