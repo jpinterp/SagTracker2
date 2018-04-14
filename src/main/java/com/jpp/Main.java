@@ -1,7 +1,6 @@
 package com.jpp;
 
 
-import com.jpp.aprs.AprsPump;
 import com.jpp.model.DataStoreFactory;
 import com.jpp.model.IDataStore;
 import org.springframework.boot.SpringApplication;
@@ -16,11 +15,9 @@ public class Main
 
         IDataStore ds = DataStoreFactory.getDataStore();
         ds.Connect();
-        ds.SetEventName("Tacos");
 
-        Thread t = new Thread(new AprsPump(ds));
-        t.start();
-
+        // Don't start saving APRS messages until the event name (database) is selected.
+        // This is now done in the EventsController.createEvent() method.
     }
 
 }
