@@ -1,7 +1,7 @@
 package com.jpp.controllers;
 
-import com.jpp.DataStoreFactory;
-import com.jpp.IDataStore;
+import com.jpp.model.DataStoreFactory;
+import com.jpp.model.IDataStore;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

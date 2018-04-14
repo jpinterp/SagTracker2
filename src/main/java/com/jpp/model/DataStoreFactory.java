@@ -1,4 +1,4 @@
-package com.jpp;
+package com.jpp.model;
 
 /**
  * Factory pattern that creates a data store singleton

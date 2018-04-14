@@ -1,4 +1,4 @@
-package com.jpp;
+package com.jpp.model;
 
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
