@@ -37,5 +37,5 @@ public interface IDataStore
     String GetConfigurationJson();
 
     // Set the system configuration in JSON format
-    boolean SetConfiguration(String configJson);
+    boolean SetConfiguration(Configuration configuration);
 }

@@ -390,7 +390,7 @@ public class MongoDataStore implements IDataStore
     }
 
     @Override
-    public boolean SetConfiguration(String configJson)
+    public boolean SetConfiguration(Configuration configuration)
     {
         return false;
     }
