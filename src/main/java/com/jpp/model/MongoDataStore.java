@@ -5,6 +5,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.*;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ public class MongoDataStore implements IDataStore
     private MongoClient client = null;
     private MongoDatabase db = null;
 
+    private ObjectMapper objectMapper = null;
+
     private Document latestLocationAggregate = null;
 
     private static final String DatabaseName = "Tacos";
@@ -30,6 +33,7 @@ public class MongoDataStore implements IDataStore
     private static final String RegistrationCollectionName = "StationRegistrations";
     private static final String ConfigurationCollectionName = "SystemConfiguration";
 
+    private static final String StationsField = "stations";
     private static final String CallsignField = "callsign";
     private static final String RegisteredField = "registered";
     private static final String LocationsField = "locations";
@@ -37,7 +41,8 @@ public class MongoDataStore implements IDataStore
     private static final String LatitudeField = "lattitude";
     private static final String LongitudeField = "longitude";
     private static final String SymbolField = "symbol";
-    private static final String EventField = "event";       // not stored in database but returned in JSON string
+    private static final String NameField = "name";       // not stored in database but returned in JSON string
+    private static final String EventsField = "events";
     private static final String RawField = "raw";
 
 
@@ -65,6 +70,8 @@ public class MongoDataStore implements IDataStore
         client = new MongoClient(host, port);
 
         latestLocationAggregate = CreateLocationAggregate();
+
+        objectMapper = new ObjectMapper();
         return true;
     }
 
@@ -121,6 +128,20 @@ public class MongoDataStore implements IDataStore
         return addFieldsDoc;
     }
 
+    public EventList GetEventNames()
+    {
+        EventList eventList = null;
+        try
+        {
+            String jsonData = GetEventNamesJson();
+            eventList = objectMapper.readValue(jsonData, EventList.class);
+        }
+        catch (Exception e)
+        {
+            System.out.printf("Error retrieving event names: %s", e.toString());
+        }
+        return eventList;
+    }
     /**
      * Retrieve the names of existing events.  For MongoDb, the event name is actually
      * the name of the database.  This function retrieves the list of all databases on
@@ -129,16 +150,18 @@ public class MongoDataStore implements IDataStore
      * @return List of event (database) names in JSON format
      */
     @Override
-    public String GetEventNames()
+    public String GetEventNamesJson()
     {
         StringBuilder sb = new StringBuilder();
         MongoCursor<String> it = client.listDatabaseNames().iterator();
 
-        sb.append("{ eventList: [");
+        sb.append("{\"");
+        sb.append(EventsField);
+        sb.append("\": [");
         while (it.hasNext())
         {
             String s = it.next();
-            sb.append(new Document(EventField, s).toJson());
+            sb.append(new Document(NameField, s).toJson());
             sb.append(",");
         }
         sb.deleteCharAt(sb.length()-1);
@@ -229,16 +252,31 @@ public class MongoDataStore implements IDataStore
         return true;
     }
 
+    public StationList GetLocations()
+    {
+        StationList stationList = null;
+        try
+        {
+            String jsonData = GetLocationsJson();
+            stationList = objectMapper.readValue(jsonData, StationList.class);
+        }
+        catch (Exception e)
+        {
+            System.out.printf("Exception serializing station list: %s\n", e.toString());
+        }
+        return stationList;
+    }
+
     /**
      * Retrieves the last location of all stations, both registered and unregistered
      *
      * @return List of stations in JSON format
      */
-    @Override
-    public String GetLocations()
+    public String GetLocationsJson()
     {
-        return GetLocationsWorker(Arrays.asList(latestLocationAggregate));
+        return GetLocationsWorkerJson(Arrays.asList(latestLocationAggregate));
     }
+
 
     /**
      * Retrieves the last location of stations that are either registered or not registered
@@ -246,14 +284,13 @@ public class MongoDataStore implements IDataStore
      * @param registered true for registered stations, false for unregistered stations
      * @return List of stations in JSON format
      */
-    @Override
-    public String GetLocations(boolean registered)
+    public String GetLocationsJson(boolean registered)
     {
         // The worker function does not like the Aggregate helpers, so Documents
         // are created instead
         Document matchDoc = new Document ("$match", new Document(RegisteredField, registered));
 
-        return GetLocationsWorker(Arrays.asList(matchDoc, latestLocationAggregate));
+        return GetLocationsWorkerJson(Arrays.asList(matchDoc, latestLocationAggregate));
     }
 
     /**
@@ -262,16 +299,18 @@ public class MongoDataStore implements IDataStore
      * @param aggregateList List of aggregate documents such as {$match: {"field", "value"}}
      * @return query results in a JSON formatted string
      */
-    private String GetLocationsWorker(List<Document> aggregateList)
+    private String GetLocationsWorkerJson(List<Document> aggregateList)
     {
         MongoCollection collection = db.getCollection(LocationCollectionName);
 
         // Perform the search
         AggregateIterable<Document> results = collection.aggregate(aggregateList);
 
-        // Convert results into a JSON formatted string
+        // Convert results into a JSON formatted string wrapping results in a field
         StringBuilder sb = new StringBuilder();
-        sb.append("{ locationList: [");
+        sb.append("{ \"");
+        sb.append(StationsField);
+        sb.append("\": [");
         results.forEach((Block<Document>) d ->
             { sb.append(d.toJson());
               sb.append(",");
@@ -319,12 +358,27 @@ public class MongoDataStore implements IDataStore
         return null;
     }
 
+    public Configuration GetConfiguration()
+    {
+        Configuration configuration = null;
+        try
+        {
+            String jsonData = GetConfigurationJson();
+            configuration = objectMapper.readValue(jsonData, Configuration.class);
+        }
+        catch (Exception e)
+        {
+            System.out.printf("Error retrieving configuration: %s\n", e.toString());
+        }
+        return configuration;
+    }
+
     /**
      * aprs: [server:string, port:integer]
      * @return
      */
     @Override
-    public String GetConfiguration()
+    public String GetConfigurationJson()
     {
         MongoCollection coll = db.getCollection(ConfigurationCollectionName);
         FindIterable<Document> results = coll.find().limit(1);  // should be only 1 doc in collection

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class EventsController
     {
         // Get the JSON data from the data store and pass it directly back to the
         // client.  Don't bother with creating intermediate POJOs
-        String jsonData = ds.GetEventNames();
+        String jsonData = ds.GetEventNamesJson();
         return new ResponseEntity<String>(jsonData, HttpStatus.OK);
     }
 

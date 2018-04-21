@@ -19,7 +19,7 @@ public class LocationsController
     @ResponseBody
     String getEvents()
     {
-        String jsonData = ds.GetLocations();
+        String jsonData = ds.GetLocationsJson();
         return jsonData;
     }
 

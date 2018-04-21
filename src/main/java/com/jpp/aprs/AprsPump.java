@@ -1,7 +1,7 @@
 package com.jpp.aprs;
 
+import com.jpp.model.Configuration;
 import com.jpp.model.IDataStore;
-import com.jpp.model.JsonHelpers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,9 +29,7 @@ public class AprsPump implements Runnable
     public void run()
     {
         // Retrieve APRS server and port from database
-        String aprsServer = JsonHelpers.GetAprsHost(dataStore);     // rotate.aprs2.net
-        int aprsPort = JsonHelpers.GetAprsPort(dataStore);          // 14580
-
+        Configuration cfg = dataStore.GetConfiguration();
         String aprsLogin = CreateAprsLogin(dataStore);
 
         Socket socket = null;
@@ -40,7 +38,7 @@ public class AprsPump implements Runnable
 
         try
         {
-            socket = new Socket(aprsServer, aprsPort);
+            socket = new Socket(cfg.getAprs().getHost(), cfg.getAprs().getPort());
             in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -127,11 +125,13 @@ public class AprsPump implements Runnable
     {
         // Sample login string:  "user W5UVO pass -1 vers SagTrack v0.1 filter r/42.2/-71.5/25\r\n"
 
-        String mapCenter = JsonHelpers.GetMapCenter(dataStore);
-        int radius = JsonHelpers.GetAprsRadius(dataStore);
+        Configuration cfg = dataStore.GetConfiguration();
 
         // Password of -1 means read-only login
-        String login = String.format("user W5UVO pass -1 vers SagTracker v0.1 filter r/%s/%d\r\n", mapCenter, radius);
+        String login = String.format("user W5UVO pass -1 vers SagTracker v0.1 filter r/%s/%s/%d\r\n",
+                cfg.getMapcenter().getLatitude(),
+                cfg.getMapcenter().getLongitude(),
+                cfg.getAprs().getRadius());
 
         return login;
     }

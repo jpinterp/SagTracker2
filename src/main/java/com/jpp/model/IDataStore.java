@@ -8,8 +8,9 @@ public interface IDataStore
     boolean Connect(String host, int port);
     boolean Disconnect();
 
-    // Get the list of existing events.  For MongoDb this is a list of databaase
-    String GetEventNames();
+    // Get the list of existing events.  For MongoDb this is a list of database names
+    EventList GetEventNames();
+    String GetEventNamesJson();
 
     // Set the name for an event.  For MongoDb this is the name of the database
     boolean SetEventName(String eventName);
@@ -18,11 +19,10 @@ public interface IDataStore
     // Add a stations location
     boolean AddLocation(String callsign, String lattitude, String longitude, String symbol, LocalDateTime timestamp, String raw);
 
-    // retrieve latest locations for all stations, data in JSON format
-    String GetLocations();
-
-    // retrieve stations for either registered or unregistered stations
-    String GetLocations(boolean registered);
+    // retrieve latest locations for all stations
+    StationList GetLocations();
+    String GetLocationsJson();
+    String GetLocationsJson(boolean registered);    // select registered or unregistered stations
 
 
     // Set the registration status for a single station
@@ -32,8 +32,9 @@ public interface IDataStore
     String GetStationRegistrations();
 
 
-    // Get the system configuration in JSON format
-    String GetConfiguration();
+    // Get the system configuration
+    Configuration GetConfiguration();
+    String GetConfigurationJson();
 
     // Set the system configuration in JSON format
     boolean SetConfiguration(String configJson);
