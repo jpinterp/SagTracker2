@@ -38,7 +38,7 @@ public class MongoDataStore implements IDataStore
     private static final String RegisteredField = "registered";
     private static final String LocationsField = "locations";
     private static final String TimestampField = "timestamp";
-    private static final String LatitudeField = "lattitude";
+    private static final String LatitudeField = "latitude";
     private static final String LongitudeField = "longitude";
     private static final String SymbolField = "symbol";
     private static final String NameField = "name";       // not stored in database but returned in JSON string
