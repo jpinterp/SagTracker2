@@ -44,6 +44,13 @@ public class MongoDataStore implements IDataStore
     private static final String NameField = "name";       // not stored in database but returned in JSON string
     private static final String EventsField = "events";
     private static final String RawField = "raw";
+    private static final String IdField = "_id";
+    private static final String AprsField = "aprs";
+    private static final String HostField = "host";
+    private static final String PortField = "port";
+    private static final String RadiusField = "radius";
+    private static final String MapCenterField = "mapcenter";
+
 
 
     /**
@@ -249,7 +256,7 @@ public class MongoDataStore implements IDataStore
             bRet = false;
         }
 
-        return true;
+        return bRet;
     }
 
     public StationList GetLocations()
@@ -392,6 +399,56 @@ public class MongoDataStore implements IDataStore
     @Override
     public boolean SetConfiguration(Configuration configuration)
     {
+        try
+        {
+            String json = objectMapper.writeValueAsString(configuration);
+            // TODO: update existing doc or insert new doc
+            Document d = new Document();
+        }
+        catch (Exception e)
+        {
+            System.out.printf("Error setting configuration: %s", e.toString());
+        }
         return false;
+    }
+
+    public boolean SetConfiguration(Configuration configuration)
+    {
+        boolean bRet = false;
+
+        MongoCollection coll = db.getCollection(ConfigurationCollectionName);
+
+        // Determine if record exists
+        Document queryDoc = new Document(IdField, configuration.get_id());
+        long docCount = coll.count(queryDoc);
+        if (docCount == 0)
+        {
+            // Insert new record
+            Document aprsDoc = new Document(HostField, configuration.getAprs().getHost())
+                            .append(PortField, configuration.getAprs().getPort())
+                            .append(RadiusField, configuration.getAprs().getRadius());
+            Document mapCenterDoc = new Document(LatitudeField, configuration.getMapcenter().getLatitude()).append(LongitudeField, configuration.getMapcenter().getLongitude()));
+            Document insertDoc = new Document(AprsField, aprsDoc).append(MapCenterField, mapCenterDoc);
+            coll.insertOne(insertDoc);
+            bRet = true;
+        }
+        else if (docCount == 1)
+        {
+            Document aprsDoc = new Document(HostField, configuration.getAprs().getHost())
+                    .append(PortField, configuration.getAprs().getPort())
+                    .append(RadiusField, configuration.getAprs().getRadius());
+            Document mapCenterDoc = new Document(LatitudeField, configuration.getMapcenter().getLatitude()).append(LongitudeField, configuration.getMapcenter().getLongitude()));
+            Document updateDoc = new Document(AprsField, aprsDoc).append(MapCenterField, mapCenterDoc);
+            coll.updateOne(queryDoc, updateDoc);
+            bRet = true;
+        }
+        else
+        {
+            // problem - too many documents found
+            bRet = false;
+        }
+
+        return bRet;
+
     }
 }
