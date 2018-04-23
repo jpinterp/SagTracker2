@@ -6,6 +6,13 @@ public class AprsInfo
     private int port;
     private int radius;
 
+    public AprsInfo(String host, int port, int radius)
+    {
+        this.host = host;
+        this.port = port;
+        this.radius = radius;
+    }
+
     public String getHost() { return host; }
     public void setHost() { this.host = host; }
 

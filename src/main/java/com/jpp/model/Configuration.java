@@ -6,6 +6,12 @@ public class Configuration
     private Position mapcenter;
     private AprsInfo aprs;
 
+    public Configuration(Position mapcenter, AprsInfo aprs)
+    {
+        this.mapcenter = mapcenter;
+        this.aprs = aprs;
+    }
+
     public MongoId get_id()
     {
         return _id;
