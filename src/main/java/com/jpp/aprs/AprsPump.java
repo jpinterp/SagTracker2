@@ -1,6 +1,6 @@
 package com.jpp.aprs;
 
-import com.jpp.model.Configuration;
+import com.jpp.SystemProperties;
 import com.jpp.model.IDataStore;
 
 import java.io.BufferedReader;
@@ -16,10 +16,6 @@ public class AprsPump implements Runnable
 {
     private IDataStore dataStore;
 
-    // The connection string with a filter for retrieving stations within 25 kilometers
-    // from Holliston, MA.  The -1 password means this is a read-only APRS client
-    String APRS_LOGIN = "user W5UVO pass -1 vers SagTracker v0.1 filter r/42.2/-71.5/25\r\n";
-
     public AprsPump(IDataStore dataStore)
     {
         this.dataStore = dataStore;
@@ -29,8 +25,8 @@ public class AprsPump implements Runnable
     public void run()
     {
         // Retrieve APRS server and port from database
-        Configuration cfg = dataStore.GetConfiguration();
-        String aprsLogin = CreateAprsLogin(dataStore);
+        // Configuration cfg = dataStore.GetConfiguration();
+        String aprsLogin = CreateAprsLogin();
 
         Socket socket = null;
         BufferedReader in = null;
@@ -38,7 +34,7 @@ public class AprsPump implements Runnable
 
         try
         {
-            socket = new Socket(cfg.getAprs().getHost(), cfg.getAprs().getPort());
+            socket = new Socket(SystemProperties.getAprsHost(), SystemProperties.getAprsPort());
             in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -115,23 +111,21 @@ public class AprsPump implements Runnable
     }
 
     /**
-     * Creates an APRS login string with a filter using the map center and radius from the data store.  Trial
+     * Creates an APRS login string with a filter using the map center and radius from the config file.  Trial
      * and error have proven that the string must end with CR-LF so that is appended by this function.
      *
-     * @param dataStore Interface to the current data store
      * @return APRS login string
      */
-    private String CreateAprsLogin(IDataStore dataStore)
+    private String CreateAprsLogin()
     {
         // Sample login string:  "user W5UVO pass -1 vers SagTrack v0.1 filter r/42.2/-71.5/25\r\n"
 
-        Configuration cfg = dataStore.GetConfiguration();
-
         // Password of -1 means read-only login
-        String login = String.format("user W5UVO pass -1 vers SagTracker v0.1 filter r/%s/%s/%d\r\n",
-                cfg.getMapcenter().getLatitude(),
-                cfg.getMapcenter().getLongitude(),
-                cfg.getAprs().getRadius());
+        String login = String.format("user %s pass -1 vers SagTracker v0.1 filter r/%s/%s/%d\r\n",
+                SystemProperties.getAprsUser(),
+                SystemProperties.getMapCenterLatitude(),    // TODO: Get from datastore
+                SystemProperties.getMapCenterLongitude(),   // TODO: Get from datastore
+                SystemProperties.getAprsRadius());
 
         return login;
     }
