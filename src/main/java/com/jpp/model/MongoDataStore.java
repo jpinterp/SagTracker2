@@ -399,23 +399,8 @@ public class MongoDataStore implements IDataStore
     @Override
     public boolean SetConfiguration(Configuration configuration)
     {
-        try
-        {
-            String json = objectMapper.writeValueAsString(configuration);
-            // TODO: update existing doc or insert new doc
-            Document d = new Document();
-        }
-        catch (Exception e)
-        {
-            System.out.printf("Error setting configuration: %s", e.toString());
-        }
-        return false;
-    }
-
-    public boolean SetConfiguration(Configuration configuration)
-    {
         boolean bRet = false;
-
+/*
         MongoCollection coll = db.getCollection(ConfigurationCollectionName);
 
         // Determine if record exists
@@ -447,7 +432,7 @@ public class MongoDataStore implements IDataStore
             // problem - too many documents found
             bRet = false;
         }
-
+*/
         return bRet;
 
     }

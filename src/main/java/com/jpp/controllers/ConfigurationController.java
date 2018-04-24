@@ -1,7 +1,5 @@
 package com.jpp.controllers;
 
-import com.jpp.aprs.AprsFactory;
-import com.jpp.aprs.IAprs;
 import com.jpp.model.Configuration;
 import com.jpp.model.DataStoreFactory;
 import com.jpp.model.IDataStore;

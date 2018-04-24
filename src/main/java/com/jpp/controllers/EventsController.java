@@ -1,5 +1,6 @@
 package com.jpp.controllers;
 
+import com.jpp.model.Configuration;
 import com.jpp.aprs.AprsFactory;
 import com.jpp.aprs.IAprs;
 import com.jpp.model.*;
@@ -38,7 +39,7 @@ public class EventsController
     @ResponseBody
     public ResponseEntity<?> createEvent(@RequestBody Event event, UriComponentsBuilder ucBuilder)
     {
-        // Determine if this event is new or an existing event
+        // Verify the event already exists
         EventList events = ds.GetEventNames();
         List<Event> le = events.getEvents();
         Iterator<Event> it = le.iterator();
@@ -53,31 +54,24 @@ public class EventsController
             }
         }
 
-        // Set the name of the event
-        ds.SetEventName(event.getName());
+        HttpStatus status = HttpStatus.FORBIDDEN;
 
-        // If new event, then create default system configuration
-        if (!existingEvent)
+        if (existingEvent)
         {
-            Configuration cfg = createDefaultConfiguration();
-            ds.SetConfiguration(cfg);
+            // Set the name of the event
+            ds.SetEventName(event.getName());
+
+            // Once the event name (database) is selected, the APRS messages can be saved.
+            IAprs aprs = AprsFactory.getAprs();
+            // TODO: Check if already running and stop, restart if necessary
+            aprs.start();
+
+            // Put URL of created event in header.  Note events use name not an id as is typical
+            HttpHeaders headers = new HttpHeaders();
+            // headers.setLocation(ucBuilder.path("/event/{id}").buildAndExpand(event.getName()).toUri());
+            status = HttpStatus.CREATED;
         }
 
-        // Once the event name (database) is selected, the APRS messages can be saved.
-        IAprs aprs = AprsFactory.getAprs();
-        aprs.start();
-
-        // Put URL of created event in header.  Note events use name not an id as is typical
-        HttpHeaders headers = new HttpHeaders();
-        // headers.setLocation(ucBuilder.path("/event/{id}").buildAndExpand(event.getName()).toUri());
-        return new ResponseEntity(HttpStatus.CREATED);
-    }
-
-    private Configuration createDefaultConfiguration()
-    {
-        AprsInfo aprs = new AprsInfo(DefaultValues.host, DefaultValues.port, DefaultValues.radius);
-        Position mapcenter = new Position(DefaultValues.latitude, DefaultValues.longitude);
-        Configuration configuration = new Configuration(mapcenter, aprs);
-        return configuration;
+        return new ResponseEntity(status);
     }
 }
